@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">KeepUp</string>
+    <string name="keepup">KeepUp</string>
+    <string name="save">Save</string>
+    <string name="saved">Saved</string>
+    <string name="subscription_string">KeepUp with latest news by purchasing the subscription</string>
+</resources>
