@@ -1,6 +1,7 @@
 package com.example.keepup.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -16,7 +17,8 @@ import com.example.keepup.utils.BlurTransformation
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
+class NewsAdapter(val clickListener: (NewsDataItem, String) -> Unit) :
+    RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
 
     inner class NewsItemViewHolder(itemView: NewsItemLayoutBinding) :
         RecyclerView.ViewHolder(itemView.root) {
@@ -71,9 +73,21 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
             holder.binding.newsHeadingTxt.text =
                 if (newsDataItem.isRestricted) context.getString(R.string.subscription_string) else newsDataItem.title
             holder.binding.publishedTimeTxt.text = getDays(newsDataItem.publishedAt)
+
+            if (newsDataItem.isRestricted)
+                holder.binding.shareImg.visibility = View.GONE
+
             setOnClickListener {
                 onItemClickListener?.let { it(newsDataItem) }
             }
+        }
+
+        holder.binding.shareImg.setOnClickListener {
+            clickListener(newsDataItem, "share")
+        }
+
+        holder.binding.cardView.setOnClickListener {
+            clickListener(newsDataItem, "view")
         }
     }
 
@@ -97,11 +111,21 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder>() {
 
     private var onItemClickListener: ((NewsDataItem) -> Unit)? = null
 
+    private var onShareClickListener: ((NewsDataItem) -> Unit)? = null
+
     fun setOnItemClickListener(listener: (NewsDataItem) -> Unit) {
         onItemClickListener = listener
     }
 
+    fun setOnShareIconClickListener(listener: (NewsDataItem) -> Unit) {
+        onShareClickListener = listener
+    }
+
     override fun getItemCount(): Int {
         return differ.currentList.size
+    }
+
+    interface OnClickListener {
+        fun onClick(newsDataItem: NewsDataItem, actionType: String)
     }
 }

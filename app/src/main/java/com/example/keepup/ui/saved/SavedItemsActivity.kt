@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -96,7 +97,36 @@ class SavedItemsActivity : AppCompatActivity() {
 
 
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter{ newsDataItem, actionItem ->
+
+            when (actionItem) {
+                "share" -> {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, "Checkout this article from KeepUp\n\n" + newsDataItem.url)
+                        type = "text/plain"
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
+                }
+                else -> {
+                    if (newsDataItem.isRestricted) {
+                        Toast.makeText(
+                            this@SavedItemsActivity,
+                            "Subscription coming soon",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@NewsAdapter
+                    }
+
+                    val intent = Intent(this@SavedItemsActivity, NewsActivity::class.java)
+                    intent.putExtra("newsItem", newsDataItem)
+                    startActivity(intent)
+                }
+            }
+
+        }
         binding.savedRecyclerView.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(this@SavedItemsActivity)

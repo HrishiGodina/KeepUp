@@ -20,6 +20,7 @@ import com.example.keepup.network.respository.NetworkRepository
 import com.example.keepup.network.viewmodel.NetworkViewModel
 import com.example.keepup.network.viewmodel.NetworkViewModelProviderFactory
 import com.example.keepup.ui.adapter.NewsAdapter
+import com.example.keepup.ui.adapter.NewsAdapter.OnClickListener
 import com.example.keepup.ui.newsItem.NewsActivity
 import com.example.keepup.ui.saved.SavedItemsActivity
 import com.example.keepup.utils.Resource
@@ -47,18 +48,7 @@ class DashboardActivity : AppCompatActivity() {
 
         newsAdapter.setOnItemClickListener {
 
-            if (it.isRestricted) {
-                Toast.makeText(
-                    this@DashboardActivity,
-                    "Subscription coming soon",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@setOnItemClickListener
-            }
 
-            val intent = Intent(this@DashboardActivity, NewsActivity::class.java)
-            intent.putExtra("newsItem", it)
-            startActivity(intent)
         }
 
         binding.savedImg.setOnClickListener(View.OnClickListener {
@@ -107,7 +97,36 @@ class DashboardActivity : AppCompatActivity() {
 
 
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter { newsDataItem, actionItem ->
+
+            when (actionItem) {
+                "share" -> {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, "Checkout this article from KeepUp\n\n" + newsDataItem.url)
+                        type = "text/plain"
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
+                }
+                else -> {
+                    if (newsDataItem.isRestricted) {
+                        Toast.makeText(
+                            this@DashboardActivity,
+                            "Subscription coming soon",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@NewsAdapter
+                    }
+
+                    val intent = Intent(this@DashboardActivity, NewsActivity::class.java)
+                    intent.putExtra("newsItem", newsDataItem)
+                    startActivity(intent)
+                }
+            }
+
+        }
         binding.newsRecyclerView.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(this@DashboardActivity)
