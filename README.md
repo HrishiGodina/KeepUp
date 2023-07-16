@@ -41,17 +41,17 @@ git clone https://github.com/HrishiGodina/KeepUp.git
 
 3. Explore the various features of KeepUp, such as browsing top headlines, saving articles, sharing articles, and reading articles within the app.
 
-# **Contributing**
+## **Contributing**
 
 Contributions to KeepUp are welcome! If you encounter any issues or have ideas for improvements, please open an issue on the repository. Feel free to submit pull requests with bug fixes, new features, or enhancements.
 
 Before contributing, please review the contribution guidelines for detailed instructions.
 
-# **License**
+## **License**
 
 This project is licensed under the MIT License. For more information, please refer to the LICENSE file.
 
-# **Acknowledgments**
+## **Acknowledgments**
 
 The KeepUp app utilizes the [NewsAPI]([url](https://newsapi.org/)) to retrieve news data. We express our gratitude to the developers and maintainers of NewsAPI for providing a valuable service.
 We would like to thank all the contributors who have helped improve and enhance KeepUp.
