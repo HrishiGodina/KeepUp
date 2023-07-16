@@ -49,7 +49,7 @@ Before contributing, please review the contribution guidelines for detailed inst
 
 ## **License**
 
-This project is licensed under the MIT License. For more information, please refer to the LICENSE file.
+This project is licensed under the MIT License. Please refer to the [LICENSE](LICENSE) file for more information.
 
 ## **Acknowledgments**
 
