@@ -3,7 +3,6 @@ package com.example.keepup.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +12,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.keepup.R
 import com.example.keepup.data.model.NewsDataItem
 import com.example.keepup.databinding.NewsItemLayoutBinding
-import com.example.keepup.utils.BlurTransformation
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,27 +45,16 @@ class NewsAdapter(val clickListener: (NewsDataItem, String) -> Unit) :
         val newsDataItem = differ.currentList[position]
 
         holder.itemView.apply {
-            if (newsDataItem.isRestricted)
-                Glide.with(context)
-                    .load(R.drawable.blur_thubnail)
-                    .fitCenter()
-                    .transform(BlurTransformation(context))
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
-                    .apply(
-                        RequestOptions().placeholder(R.drawable.default_thubnail)
-                            .error(R.drawable.default_thubnail)
-                    )
-                    .into(holder.binding.newsImage)
-            else
-                Glide.with(context)
-                    .load(newsDataItem.urlToImage)
-                    .fitCenter()
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
-                    .apply(
-                        RequestOptions().placeholder(R.drawable.default_thubnail)
-                            .error(R.drawable.default_thubnail)
-                    )
-                    .into(holder.binding.newsImage)
+
+            Glide.with(context)
+                .load(if (newsDataItem.isRestricted) R.drawable.blur_thubnail else newsDataItem.urlToImage)
+                .fitCenter()
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(16)))
+                .apply(
+                    RequestOptions().placeholder(R.drawable.default_thubnail)
+                        .error(R.drawable.default_thubnail)
+                )
+                .into(holder.binding.newsImage)
 
             holder.binding.publisherNameTxt.text = newsDataItem.source?.name
             holder.binding.newsHeadingTxt.text =

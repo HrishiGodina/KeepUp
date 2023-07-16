@@ -55,15 +55,22 @@ class DashboardActivity : AppCompatActivity() {
             startActivity(Intent(this@DashboardActivity, SavedItemsActivity::class.java))
         })
 
-        //subscribe to live data
+
         viewModel.topHeadLines.observe(this, Observer { response ->
             when (response) {
                 is Resource.Success -> {
                     hideProgressBar()
-                    //check null
+
                     response.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
-                        val totalPages = newsResponse.totalResults / Companion.QUERY_PAGE_SIZE + 2
+                        if (newsAdapter.differ.currentList.size > 0) {
+                            binding.newsRecyclerView.visibility = View.VISIBLE
+                            binding.noDataImg.visibility = View.GONE
+                        } else {
+                            binding.newsRecyclerView.visibility = View.GONE
+                            binding.noDataImg.visibility = View.VISIBLE
+                        }
+                        val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
                         isLastPage = viewModel.topHeadLinesNewsPage == totalPages
                         if (isLastPage) {
                             binding.newsRecyclerView.setPadding(0, 0, 0, 0)
@@ -72,6 +79,8 @@ class DashboardActivity : AppCompatActivity() {
                 }
                 is Resource.Error -> {
                     hideProgressBar()
+                    binding.newsRecyclerView.visibility = View.GONE
+                    binding.noDataImg.visibility = View.VISIBLE
                     response.message?.let { message ->
                         Log.e(TAG, "An error occured: $message")
                         Toast.makeText(
@@ -82,6 +91,8 @@ class DashboardActivity : AppCompatActivity() {
                     }
                 }
                 is Resource.Loading -> {
+                    binding.newsRecyclerView.visibility = View.GONE
+                    binding.noDataImg.visibility = View.GONE
                     showProgressBar()
                 }
             }
@@ -103,7 +114,10 @@ class DashboardActivity : AppCompatActivity() {
                 "share" -> {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, "Checkout this article from KeepUp\n\n" + newsDataItem.url)
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            "Checkout this article from KeepUp\n\n" + newsDataItem.url
+                        )
                         type = "text/plain"
                     }
 
@@ -131,7 +145,6 @@ class DashboardActivity : AppCompatActivity() {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(this@DashboardActivity)
             addOnScrollListener(this@DashboardActivity.scrollListener as RecyclerView.OnScrollListener)
-
         }
     }
 
@@ -179,6 +192,16 @@ class DashboardActivity : AppCompatActivity() {
                 isScrolling = true
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.getSavedNewsDataItems().observe(this, Observer { newsDataItems ->
+
+            val size = if (newsDataItems.size > 9) "9+" else newsDataItems.size.toString()
+            binding.savedCountTxt.text = size
+        })
     }
 
     companion object {

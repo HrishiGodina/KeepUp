@@ -25,12 +25,25 @@
         android:id="@+id/savedImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/headingTxt"
+        android:layout_marginEnd="@dimen/dimen_20dp"
         app:layout_constraintBottom_toBottomOf="@+id/headingTxt"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/dimen_20dp"
-        app:tint="@color/colorPrimaryNew"
-        app:srcCompat="@drawable/ic_favorite"/>
+        app:layout_constraintTop_toTopOf="@+id/headingTxt"
+        app:srcCompat="@drawable/ic_favorite"
+        app:tint="@color/colorPrimaryNew" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/savedCountTxt"
+        android:layout_width="@dimen/dimen_15dp"
+        android:layout_height="@dimen/dimen_15dp"
+        android:background="@drawable/count_bg"
+        app:layout_constraintEnd_toEndOf="@+id/savedImg"
+        android:textSize="@dimen/dimen_10sp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@+id/savedImg"
+        app:layout_constraintTop_toTopOf="@+id/savedImg"
+        tools:text="9+" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/newsRecyclerView"
@@ -40,6 +53,17 @@
         app:layout_constraintTop_toBottomOf="@+id/headingTxt"
         app:spanCount="7"
         tools:listitem="@layout/news_item_layout" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/noDataImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/headingTxt"
+        app:srcCompat="@drawable/ic_no_data_found" />
 
     <ProgressBar
         android:id="@+id/paginationProgressBar"
