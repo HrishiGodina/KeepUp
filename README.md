@@ -53,6 +53,6 @@ This project is licensed under the MIT License. Please refer to the [LICENSE](LI
 
 ## **Acknowledgments**
 
-The KeepUp app utilizes the [News API]([url](https://newsapi.org/)) to retrieve news data. We express our gratitude to the developers and maintainers of NewsAPI for providing a valuable service.
+The KeepUp app utilizes the [NewsAPI](https://newsapi.org/) to retrieve news data. We express our gratitude to the developers and maintainers of NewsAPI for providing a valuable service.
 We would like to thank all the contributors who have helped improve and enhance KeepUp.
 Special thanks to the Android community for their continuous support and the availability of amazing open-source libraries and tools.
